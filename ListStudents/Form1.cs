@@ -24,6 +24,10 @@ namespace ListOfStudents
             Previous_item.Enabled = false;
             Next.Enabled = false;
             Next_item.Enabled = false;
+            deleteStudent.Enabled = false;
+            label_first_name.Tag = -1;
+            label_second_name.Tag = -1;
+            label_faculty.Tag = -1;
         }
         private void CreateSpisokItem_Click(object sender, EventArgs e)
         {
@@ -33,7 +37,6 @@ namespace ListOfStudents
             Previous_item.Enabled = false;
             Next.Enabled = false;
             Next_item.Enabled = false;
-
             Debug.Text = "Empty spisok is created";
         }
 
@@ -50,7 +53,7 @@ namespace ListOfStudents
             {
                 string filename = dlg.FileName;
                 if (!dlg.SafeFileName.Contains(".xml") || string.IsNullOrEmpty(filename)) return;
-                Debug.Text = filename;
+                Debug.Text = "File is opened: " + filename;
 
                 XmlSerializer formatter = new XmlSerializer(typeof(List<Student>));
 
@@ -58,17 +61,21 @@ namespace ListOfStudents
                 try
                 {
                     students = (List<Student>)formatter.Deserialize(fs);
-                    foreach (Student a in students)
-                        Debug.Text += a.FirstName + " " + a.SecondName + " " + a.Faculty + " ";
+                    Previous_item.Enabled = false;
                     Previous.Enabled = false;
+                    deleteStudent.Enabled = true;
 
-                    FirstNameTextBox.Text = students[0].FirstName;
-                    SecondNameTextBox.Text = students[0].SecondName;
-                    FacultyTextBox.Text = students[0].Faculty;
+                    pos = 0;
+                    Next.Enabled = true;
+                    Next_item.Enabled = true;
+                    FirstNameTextBox.Text = students[pos].FirstName;
+                    SecondNameTextBox.Text = students[pos].SecondName;
+                    FacultyTextBox.Text = students[pos].Faculty;
+
                 }
-                catch (Exception exp)
+                catch
                 {
-                    Debug.Text = exp.Message;
+                    Debug.Text = "Файл пустой";
                 }
             }
         }
@@ -117,44 +124,63 @@ namespace ListOfStudents
             FacultyTextBox.Text = students[pos].Faculty;
         }
 
-        private void Next_Click(object sender, EventArgs e)     //кнопка следующий на форме
+        private void Next_Click(object sender, EventArgs e)     //button next
         {
+            Previous.Enabled = true;
+            Previous_item.Enabled = true;
             pos++;
-            if (pos == (students.Count - 1))
+            if (pos == students.Count) //если в списке больше нет элементов, то очистить поля ввода
             {
                 Next.Enabled = false;
                 Next_item.Enabled = false;
+                FirstNameTextBox.Text = string.Empty;
+                SecondNameTextBox.Text = string.Empty;
+                FacultyTextBox.Text = string.Empty;
+
+                label_first_name.Text = string.Empty;
+                label_first_name.Tag = -1;
+                label_second_name.Text = string.Empty;
+                label_second_name.Tag = -1;
+                label_faculty.Text = string.Empty;
+                label_faculty.Tag = -1;
+
+                return;
             }
-            Previous.Enabled = true;
-            Previous_item.Enabled = true;
             FirstNameTextBox.Text = students[pos].FirstName;
             SecondNameTextBox.Text = students[pos].SecondName;
             FacultyTextBox.Text = students[pos].Faculty;
         }
-        private void addStudentItem_Click(object sender, EventArgs e)//добавление нового студента
+        private void addStudentItem_Click(object sender, EventArgs e)//adding a new student
         {
-            if (students == null)
-                students = new List<Student>();
-            if (label_first_name.Text == string.Empty || label_second_name.Text == string.Empty || label_faculty.Text == string.Empty)
+            if ((int)label_first_name.Tag != 0 || (int)label_second_name.Tag != 0 || (int)label_faculty.Tag != 0) //if label is no empty then textobes is empty
             {
                 Debug.Text = "Поля пустые";
                 return;
             }
+            if (students == null)
+                students = new List<Student>();
             students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
-            pos = students.Count - 1;
+            pos = students.Count;
+
+            FirstNameTextBox.Text = string.Empty;
+            SecondNameTextBox.Text = string.Empty;
+            FacultyTextBox.Text = string.Empty;
 
             Next.Enabled = false;
             Next_item.Enabled = false;
+            Previous.Enabled = true;
+            Previous_item.Enabled = true;
 
-            if (pos != 0)
-            {
-                Previous.Enabled = true;
-                Previous_item.Enabled = true;
-            }
-            Debug.Text = "Информация";
+            label_first_name.Text = string.Empty;
+            label_first_name.Tag = -1;
+            label_second_name.Text = string.Empty;
+            label_second_name.Tag = -1;
+            label_faculty.Text = string.Empty;
+            label_faculty.Tag = -1;
+            Debug.Text = "Студент добавлен";
         }
 
-        private void DeleteStudentClick(object sender, EventArgs e) //удаление выбранного студента
+        private void DeleteStudentClick(object sender, EventArgs e) //delete selected student
         {
             students.RemoveAt(pos);
 
@@ -178,25 +204,43 @@ namespace ListOfStudents
         private void FirstNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(FirstNameTextBox.Text))
+            {
                 label_first_name.Text = "Incorrect first name";
+                label_first_name.Tag = -1;
+            }
             else
+            {
                 label_first_name.Text = string.Empty;
+                label_first_name.Tag = 0;
+            }
         }
 
         private void SecondNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(SecondNameTextBox.Text))
+            {
                 label_second_name.Text = "Incorrect second name";
+                label_second_name.Tag = -1;
+            }
             else
+            {
                 label_second_name.Text = string.Empty;
+                label_second_name.Tag = 0;
+            }
         }
 
         private void FacultyTextBox_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(FacultyTextBox.Text))
+            {
                 label_faculty.Text = "Incorrect faculty";
+                label_faculty.Tag = -1;
+            }
             else
+            {
                 label_faculty.Text = string.Empty;
+                label_faculty.Tag = 0;
+            }
         }
     }
 

@@ -1,8 +1,23 @@
 <?xml version="1.0"?>
 <ArrayOfStudent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Student>
-    <FirstName>fvfv</FirstName>
-    <SecondName>Фамилия</SecondName>
-    <Faculty>uumu</Faculty>
+    <FirstName>fvfvgb</FirstName>
+    <SecondName>bbbb</SecondName>
+    <Faculty>cccc</Faculty>
   </Student>
-</ArrayOfStudent>t>
+  <Student>
+    <FirstName>fvfvgb</FirstName>
+    <SecondName>bbbb</SecondName>
+    <Faculty>cccc</Faculty>
+  </Student>
+  <Student>
+    <FirstName>Dmitry</FirstName>
+    <SecondName>Telegin</SecondName>
+    <Faculty>Matehmatics</Faculty>
+  </Student>
+  <Student>
+    <FirstName>Max</FirstName>
+    <SecondName>Ryabov</SecondName>
+    <Faculty>data analys</Faculty>
+  </Student>
+</ArrayOfStudent>
