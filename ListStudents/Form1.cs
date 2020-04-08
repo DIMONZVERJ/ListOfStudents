@@ -24,7 +24,6 @@ namespace ListOfStudents
             Previous_item.Enabled = false;
             Next.Enabled = false;
             Next_item.Enabled = false;
-            deleteStudent.Enabled = false;
             label_first_name.Tag = -1;
             label_second_name.Tag = -1;
             label_faculty.Tag = -1;
@@ -133,16 +132,8 @@ namespace ListOfStudents
             {
                 Next.Enabled = false;
                 Next_item.Enabled = false;
-                FirstNameTextBox.Text = string.Empty;
-                SecondNameTextBox.Text = string.Empty;
-                FacultyTextBox.Text = string.Empty;
 
-                label_first_name.Text = string.Empty;
-                label_first_name.Tag = -1;
-                label_second_name.Text = string.Empty;
-                label_second_name.Tag = -1;
-                label_faculty.Text = string.Empty;
-                label_faculty.Tag = -1;
+                MakingEmptyLabel();
 
                 return;
             }
@@ -162,38 +153,69 @@ namespace ListOfStudents
             students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
             pos = students.Count;
 
-            FirstNameTextBox.Text = string.Empty;
-            SecondNameTextBox.Text = string.Empty;
-            FacultyTextBox.Text = string.Empty;
-
             Next.Enabled = false;
             Next_item.Enabled = false;
             Previous.Enabled = true;
             Previous_item.Enabled = true;
 
-            label_first_name.Text = string.Empty;
-            label_first_name.Tag = -1;
-            label_second_name.Text = string.Empty;
-            label_second_name.Tag = -1;
-            label_faculty.Text = string.Empty;
-            label_faculty.Tag = -1;
+            MakingEmptyLabel();
+
             Debug.Text = "Студент добавлен";
         }
 
         private void DeleteStudentClick(object sender, EventArgs e) //delete selected student
         {
-            students.RemoveAt(pos);
+            if ((int)label_first_name.Tag == -1 || (int)label_second_name.Tag == -1 || (int)label_faculty.Tag == -1)
+            {
+                Debug.Text = "Поля пустые";
+                return;
+            }
+            string first_name = FirstNameTextBox.Text;
+            string second_name = SecondNameTextBox.Text;
+            string faculty_name = FacultyTextBox.Text;
 
-            if (pos > 0) pos--;
-            if (pos == 0)
+            int index = students.FindIndex(x => x.FirstName == first_name && x.SecondName == second_name && x.Faculty == faculty_name);
+            if (index < 0)
+            {
+                Debug.Text = "Элемент не найден";
+                return;
+            }
+            students.RemoveAt(index);
+            pos = index;
+            if (students.Count == 0)
             {
                 Previous.Enabled = false;
                 Previous_item.Enabled = false;
+                Next.Enabled = false;
+                Next_item.Enabled = false;
+
+                MakingEmptyLabel();
+                return;
             }
             if (pos == (students.Count - 1))
             {
-                Next.Enabled = false;
-                Next_item.Enabled = false;
+                if (students.Count == 1)
+                {
+                    Previous.Enabled = false;
+                    Previous_item.Enabled = false;
+                }
+            }
+            if (pos == students.Count)
+            {
+                if (students.Count == 0)
+                {
+                    Previous.Enabled = false;
+                    Previous_item.Enabled = false;
+                    Next.Enabled = false;
+                    Next_item.Enabled = false;
+                    return;
+                }
+                if (students.Count == 1)
+                {
+                    Previous.Enabled = false;
+                    Previous_item.Enabled = false;
+                }
+                pos--;
             }
 
             FirstNameTextBox.Text = students[pos].FirstName;
@@ -241,6 +263,20 @@ namespace ListOfStudents
                 label_faculty.Text = string.Empty;
                 label_faculty.Tag = 0;
             }
+        }
+
+        private void MakingEmptyLabel()
+        {
+            FirstNameTextBox.Text = string.Empty;
+            SecondNameTextBox.Text = string.Empty;
+            FacultyTextBox.Text = string.Empty;
+
+            label_first_name.Text = string.Empty;
+            label_second_name.Text = string.Empty;
+            label_faculty.Text = string.Empty;
+            label_first_name.Tag = -1;
+            label_second_name.Tag = -1;
+            label_faculty.Tag = -1;
         }
     }
 
