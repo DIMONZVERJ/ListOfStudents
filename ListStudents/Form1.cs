@@ -173,22 +173,14 @@ namespace ListOfStudents
                 MakingEmptyLabel();
                 return;
             }
-            if (pos == (students.Count - 1)) //если удалили предпоследнего студента
+            if (pos == (students.Count - 1) || pos == students.Count) //если удалили предпоследнего студента
             {
                 if (students.Count == 1)
                 {
                     Previous.Enabled = false;
                     Previous_item.Enabled = false;
                 }
-            }
-            if (pos == students.Count) //если удалили последнего студента в списке
-            {
-                if (students.Count == 1)
-                {
-                    Previous.Enabled = false;
-                    Previous_item.Enabled = false;
-                }
-                pos--;
+                if (pos == students.Count) pos--;
             }
 
             FirstNameTextBox.Text = students[pos].FirstName;
