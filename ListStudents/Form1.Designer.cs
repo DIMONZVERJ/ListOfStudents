@@ -63,7 +63,7 @@
             this.студентыToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -74,13 +74,13 @@
             this.OpenSpicok,
             this.SaveSpisok});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // CreateSpisok
             // 
             this.CreateSpisok.Name = "CreateSpisok";
-            this.CreateSpisok.Size = new System.Drawing.Size(224, 26);
+            this.CreateSpisok.Size = new System.Drawing.Size(218, 26);
             this.CreateSpisok.Text = "Создать список";
             this.CreateSpisok.Click += new System.EventHandler(this.CreateSpisokItem_Click);
             // 
@@ -88,13 +88,13 @@
             // 
             this.OpenSpicok.Name = "OpenSpicok";
             this.OpenSpicok.Size = new System.Drawing.Size(224, 26);
-            this.OpenSpicok.Text = "Открыть список";
+            this.OpenSpicok.Text = "Сохранить как";
             this.OpenSpicok.Click += new System.EventHandler(this.OpenSpisokClick);
             // 
             // SaveSpisok
             // 
             this.SaveSpisok.Name = "SaveSpisok";
-            this.SaveSpisok.Size = new System.Drawing.Size(224, 26);
+            this.SaveSpisok.Size = new System.Drawing.Size(218, 26);
             this.SaveSpisok.Text = "Сохранить список";
             this.SaveSpisok.Click += new System.EventHandler(this.SaveSpisokClick);
             // 
@@ -104,22 +104,22 @@
             this.Previous_item,
             this.Next_item});
             this.просмотрToolStripMenuItem.Name = "просмотрToolStripMenuItem";
-            this.просмотрToolStripMenuItem.Size = new System.Drawing.Size(94, 26);
+            this.просмотрToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
             this.просмотрToolStripMenuItem.Text = "Просмотр";
             // 
-            // Previus
+            // Previous_item
             // 
-            this.Previous_item.Name = "Previus";
+            this.Previous_item.Name = "Previous_item";
             this.Previous_item.Size = new System.Drawing.Size(224, 26);
             this.Previous_item.Text = "Предыдущий";
-            this.Previous_item.Click += new System.EventHandler(this.PreviousItemClick);
+            this.Previous_item.Click += new System.EventHandler(this.Previous_Click);
             // 
             // Next_item
             // 
             this.Next_item.Name = "Next_item";
             this.Next_item.Size = new System.Drawing.Size(224, 26);
             this.Next_item.Text = "Следующий";
-            this.Next_item.Click += new System.EventHandler(this.NextItem_Click);
+            this.Next_item.Click += new System.EventHandler(this.Next_Click);
             // 
             // студентыToolStripMenuItem
             // 
@@ -127,20 +127,20 @@
             this.addStudent,
             this.deleteStudent});
             this.студентыToolStripMenuItem.Name = "студентыToolStripMenuItem";
-            this.студентыToolStripMenuItem.Size = new System.Drawing.Size(87, 26);
+            this.студентыToolStripMenuItem.Size = new System.Drawing.Size(87, 24);
             this.студентыToolStripMenuItem.Text = "Студенты";
             // 
             // addStudent
             // 
             this.addStudent.Name = "addStudent";
-            this.addStudent.Size = new System.Drawing.Size(224, 26);
+            this.addStudent.Size = new System.Drawing.Size(159, 26);
             this.addStudent.Text = "Добавить";
             this.addStudent.Click += new System.EventHandler(this.addStudentItem_Click);
             // 
             // deleteStudent
             // 
             this.deleteStudent.Name = "deleteStudent";
-            this.deleteStudent.Size = new System.Drawing.Size(224, 26);
+            this.deleteStudent.Size = new System.Drawing.Size(159, 26);
             this.deleteStudent.Text = "Удалить";
             this.deleteStudent.Click += new System.EventHandler(this.DeleteStudentClick);
             // 
@@ -271,6 +271,7 @@
             this.Controls.Add(this.SecondName);
             this.Controls.Add(this.Debug);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Студенты";

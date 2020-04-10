@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Microsoft.Win32;
 
 namespace ListOfStudents
 {
@@ -17,6 +10,7 @@ namespace ListOfStudents
     {
         List<Student> students; //текущий список студентов
         int pos;    //номер позиции студента, которого мы сейчас просматриваем
+        string file_name;
         public Form1()
         {
             InitializeComponent();
@@ -36,7 +30,7 @@ namespace ListOfStudents
             Previous_item.Enabled = false;
             Next.Enabled = false;
             Next_item.Enabled = false;
-            Debug.Text = "Empty spisok is created";
+            Debug.Text = "Пустой список создан";
         }
 
         private void OpenSpisokClick(object sender, EventArgs e)
@@ -45,18 +39,19 @@ namespace ListOfStudents
             {
                 InitialDirectory = @"D:\VSProject\ListOfStudents\ListStudents",
                 DefaultExt = ".xml", // Default file extension
+                Filter = "xml files|*.xml",
                 AutoUpgradeEnabled = true
             };
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                string filename = dlg.FileName;
-                if (!dlg.SafeFileName.Contains(".xml") || string.IsNullOrEmpty(filename)) return;
-                Debug.Text = "File is opened: " + filename;
+                file_name = dlg.FileName;
+                if (!dlg.SafeFileName.Contains(".xml") || string.IsNullOrEmpty(file_name)) return;
+                Debug.Text = "File is opened: " + file_name;
 
                 XmlSerializer formatter = new XmlSerializer(typeof(List<Student>));
 
-                using FileStream fs = new FileStream(filename, FileMode.OpenOrCreate);
+                using FileStream fs = new FileStream(file_name, FileMode.OpenOrCreate);
                 try
                 {
                     students = (List<Student>)formatter.Deserialize(fs);
@@ -85,8 +80,9 @@ namespace ListOfStudents
             {
                 InitialDirectory = @"D:\VSProject\ListOfStudents\ListStudents",
                 DefaultExt = ".xml", // Default file extension
+                Filter = "xml files|*.xml"
             };
-
+            if (file_name != null) dlg.FileName = file_name;
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 string filename = dlg.FileName;
@@ -97,17 +93,6 @@ namespace ListOfStudents
                 formatter.Serialize(fs, students);
             }
         }
-
-        private void PreviousItemClick(object sender, EventArgs e)
-        {
-            Previous_Click(sender, e);
-        }
-
-        private void NextItem_Click(object sender, EventArgs e)
-        {
-            Next_Click(sender, e);
-        }
-
         private void Previous_Click(object sender, EventArgs e)     //кнопка предыдущий на форме
         {
             pos--;
@@ -132,7 +117,6 @@ namespace ListOfStudents
             {
                 Next.Enabled = false;
                 Next_item.Enabled = false;
-
                 MakingEmptyLabel();
 
                 return;
@@ -143,11 +127,7 @@ namespace ListOfStudents
         }
         private void addStudentItem_Click(object sender, EventArgs e)//adding a new student
         {
-            if ((int)label_first_name.Tag != 0 || (int)label_second_name.Tag != 0 || (int)label_faculty.Tag != 0) //if label is no empty then textobes is empty
-            {
-                Debug.Text = "Поля пустые";
-                return;
-            }
+            Check_text_boxes();
             if (students == null)
                 students = new List<Student>();
             students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
@@ -165,11 +145,12 @@ namespace ListOfStudents
 
         private void DeleteStudentClick(object sender, EventArgs e) //delete selected student
         {
-            if ((int)label_first_name.Tag == -1 || (int)label_second_name.Tag == -1 || (int)label_faculty.Tag == -1)
+            if (students == null)
             {
-                Debug.Text = "Поля пустые";
+                Debug.Text = "список не инициализован";
                 return;
             }
+            Check_text_boxes();
             string first_name = FirstNameTextBox.Text;
             string second_name = SecondNameTextBox.Text;
             string faculty_name = FacultyTextBox.Text;
@@ -182,7 +163,7 @@ namespace ListOfStudents
             }
             students.RemoveAt(index);
             pos = index;
-            if (students.Count == 0)
+            if (students.Count == 0) //если удалили последнего студента
             {
                 Previous.Enabled = false;
                 Previous_item.Enabled = false;
@@ -192,7 +173,7 @@ namespace ListOfStudents
                 MakingEmptyLabel();
                 return;
             }
-            if (pos == (students.Count - 1))
+            if (pos == (students.Count - 1)) //если удалили предпоследнего студента
             {
                 if (students.Count == 1)
                 {
@@ -200,16 +181,8 @@ namespace ListOfStudents
                     Previous_item.Enabled = false;
                 }
             }
-            if (pos == students.Count)
+            if (pos == students.Count) //если удалили последнего студента в списке
             {
-                if (students.Count == 0)
-                {
-                    Previous.Enabled = false;
-                    Previous_item.Enabled = false;
-                    Next.Enabled = false;
-                    Next_item.Enabled = false;
-                    return;
-                }
                 if (students.Count == 1)
                 {
                     Previous.Enabled = false;
@@ -227,7 +200,7 @@ namespace ListOfStudents
         {
             if (string.IsNullOrWhiteSpace(FirstNameTextBox.Text))
             {
-                label_first_name.Text = "Incorrect first name";
+                label_first_name.Text = "Некорректное имя";
                 label_first_name.Tag = -1;
             }
             else
@@ -241,7 +214,7 @@ namespace ListOfStudents
         {
             if (string.IsNullOrWhiteSpace(SecondNameTextBox.Text))
             {
-                label_second_name.Text = "Incorrect second name";
+                label_second_name.Text = "Некорректная фамилия";
                 label_second_name.Tag = -1;
             }
             else
@@ -255,7 +228,7 @@ namespace ListOfStudents
         {
             if (string.IsNullOrWhiteSpace(FacultyTextBox.Text))
             {
-                label_faculty.Text = "Incorrect faculty";
+                label_faculty.Text = "Некорректный факультет";
                 label_faculty.Tag = -1;
             }
             else
@@ -277,6 +250,15 @@ namespace ListOfStudents
             label_first_name.Tag = -1;
             label_second_name.Tag = -1;
             label_faculty.Tag = -1;
+        }
+
+        private void Check_text_boxes()
+        {
+            if ((int)label_first_name.Tag == -1 || (int)label_second_name.Tag == -1 || (int)label_faculty.Tag == -1)
+            {
+                Debug.Text = "Поля пустые";
+                return;
+            }
         }
     }
 
