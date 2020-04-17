@@ -31,15 +31,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CreateSpisok = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenSpicok = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveSpisok = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenSpicok = new System.Windows.Forms.ToolStripMenuItem();
             this.просмотрToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Previous_item = new System.Windows.Forms.ToolStripMenuItem();
             this.Next_item = new System.Windows.Forms.ToolStripMenuItem();
             this.студентыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addStudent = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteStudent = new System.Windows.Forms.ToolStripMenuItem();
-            this.Debug = new System.Windows.Forms.Label();
             this.SecondName = new System.Windows.Forms.Label();
             this.FirstName = new System.Windows.Forms.Label();
             this.Faculty = new System.Windows.Forms.Label();
@@ -51,7 +50,13 @@
             this.label_first_name = new System.Windows.Forms.Label();
             this.label_second_name = new System.Windows.Forms.Label();
             this.label_faculty = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripLabelnfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.dlg_open = new System.Windows.Forms.OpenFileDialog();
+            this.dlg_save = new System.Windows.Forms.SaveFileDialog();
+            this.button_update = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -71,8 +76,8 @@
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CreateSpisok,
-            this.OpenSpicok,
-            this.SaveSpisok});
+            this.SaveSpisok,
+            this.OpenSpicok});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             this.файлToolStripMenuItem.Text = "Файл";
@@ -84,19 +89,19 @@
             this.CreateSpisok.Text = "Создать список";
             this.CreateSpisok.Click += new System.EventHandler(this.CreateSpisokItem_Click);
             // 
-            // OpenSpicok
-            // 
-            this.OpenSpicok.Name = "OpenSpicok";
-            this.OpenSpicok.Size = new System.Drawing.Size(224, 26);
-            this.OpenSpicok.Text = "Сохранить как";
-            this.OpenSpicok.Click += new System.EventHandler(this.OpenSpisokClick);
-            // 
             // SaveSpisok
             // 
             this.SaveSpisok.Name = "SaveSpisok";
             this.SaveSpisok.Size = new System.Drawing.Size(218, 26);
             this.SaveSpisok.Text = "Сохранить список";
             this.SaveSpisok.Click += new System.EventHandler(this.SaveSpisokClick);
+            // 
+            // OpenSpicok
+            // 
+            this.OpenSpicok.Name = "OpenSpicok";
+            this.OpenSpicok.Size = new System.Drawing.Size(218, 26);
+            this.OpenSpicok.Text = "Открыть список";
+            this.OpenSpicok.Click += new System.EventHandler(this.OpenSpisokClick);
             // 
             // просмотрToolStripMenuItem
             // 
@@ -109,15 +114,17 @@
             // 
             // Previous_item
             // 
+            this.Previous_item.Enabled = false;
             this.Previous_item.Name = "Previous_item";
-            this.Previous_item.Size = new System.Drawing.Size(224, 26);
+            this.Previous_item.Size = new System.Drawing.Size(184, 26);
             this.Previous_item.Text = "Предыдущий";
             this.Previous_item.Click += new System.EventHandler(this.Previous_Click);
             // 
             // Next_item
             // 
+            this.Next_item.Enabled = false;
             this.Next_item.Name = "Next_item";
-            this.Next_item.Size = new System.Drawing.Size(224, 26);
+            this.Next_item.Size = new System.Drawing.Size(184, 26);
             this.Next_item.Text = "Следующий";
             this.Next_item.Click += new System.EventHandler(this.Next_Click);
             // 
@@ -139,19 +146,11 @@
             // 
             // deleteStudent
             // 
+            this.deleteStudent.Enabled = false;
             this.deleteStudent.Name = "deleteStudent";
             this.deleteStudent.Size = new System.Drawing.Size(159, 26);
             this.deleteStudent.Text = "Удалить";
             this.deleteStudent.Click += new System.EventHandler(this.DeleteStudentClick);
-            // 
-            // Debug
-            // 
-            this.Debug.AutoSize = true;
-            this.Debug.Location = new System.Drawing.Point(12, 43);
-            this.Debug.Name = "Debug";
-            this.Debug.Size = new System.Drawing.Size(94, 17);
-            this.Debug.TabIndex = 1;
-            this.Debug.Text = "Информация";
             // 
             // SecondName
             // 
@@ -209,10 +208,11 @@
             // 
             // Previous
             // 
-            this.Previous.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Previous.Location = new System.Drawing.Point(150, 257);
+            this.Previous.Enabled = false;
+            this.Previous.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.Previous.Location = new System.Drawing.Point(81, 257);
             this.Previous.Name = "Previous";
-            this.Previous.Size = new System.Drawing.Size(210, 98);
+            this.Previous.Size = new System.Drawing.Size(178, 98);
             this.Previous.TabIndex = 8;
             this.Previous.Text = "Предыдущий";
             this.Previous.UseVisualStyleBackColor = true;
@@ -220,10 +220,11 @@
             // 
             // Next
             // 
-            this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Next.Location = new System.Drawing.Point(410, 257);
+            this.Next.Enabled = false;
+            this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.Next.Location = new System.Drawing.Point(280, 257);
             this.Next.Name = "Next";
-            this.Next.Size = new System.Drawing.Size(210, 98);
+            this.Next.Size = new System.Drawing.Size(142, 98);
             this.Next.TabIndex = 9;
             this.Next.Text = "Следующий";
             this.Next.UseVisualStyleBackColor = true;
@@ -236,6 +237,7 @@
             this.label_first_name.Name = "label_first_name";
             this.label_first_name.Size = new System.Drawing.Size(0, 17);
             this.label_first_name.TabIndex = 10;
+            this.label_first_name.Tag = "-1";
             // 
             // label_second_name
             // 
@@ -244,6 +246,7 @@
             this.label_second_name.Name = "label_second_name";
             this.label_second_name.Size = new System.Drawing.Size(0, 17);
             this.label_second_name.TabIndex = 11;
+            this.label_second_name.Tag = "-1";
             // 
             // label_faculty
             // 
@@ -252,12 +255,54 @@
             this.label_faculty.Name = "label_faculty";
             this.label_faculty.Size = new System.Drawing.Size(0, 17);
             this.label_faculty.TabIndex = 12;
+            this.label_faculty.Tag = "-1";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabelnfo});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 442);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.TabIndex = 13;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripLabelnfo
+            // 
+            this.toolStripLabelnfo.Name = "toolStripLabelnfo";
+            this.toolStripLabelnfo.Size = new System.Drawing.Size(0, 16);
+            // 
+            // dlg_open
+            // 
+            this.dlg_open.DefaultExt = "xml";
+            this.dlg_open.Filter = "xml files|*.xml|all files|*.*";
+            // 
+            // dlg_save
+            // 
+            this.dlg_save.DefaultExt = "xml";
+            this.dlg_save.Filter = "xml files|*.xml";
+            this.dlg_save.InitialDirectory = "D:\\VSProject\\ListOfStudents\\ListStudents";
+            // 
+            // button_update
+            // 
+            this.button_update.Enabled = false;
+            this.button_update.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.button_update.Location = new System.Drawing.Point(448, 257);
+            this.button_update.Name = "button_update";
+            this.button_update.Size = new System.Drawing.Size(148, 98);
+            this.button_update.TabIndex = 14;
+            this.button_update.Text = "Обновить студента";
+            this.button_update.UseVisualStyleBackColor = true;
+            this.button_update.Click += new System.EventHandler(this.button_update_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 464);
+            this.Controls.Add(this.button_update);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label_faculty);
             this.Controls.Add(this.label_second_name);
             this.Controls.Add(this.label_first_name);
@@ -269,14 +314,17 @@
             this.Controls.Add(this.Faculty);
             this.Controls.Add(this.FirstName);
             this.Controls.Add(this.SecondName);
-            this.Controls.Add(this.Debug);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Студенты";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -291,7 +339,6 @@
         private System.Windows.Forms.ToolStripMenuItem CreateSpisok;
         private System.Windows.Forms.ToolStripMenuItem OpenSpicok;
         private System.Windows.Forms.ToolStripMenuItem SaveSpisok;
-        private System.Windows.Forms.Label Debug;
         private System.Windows.Forms.ToolStripMenuItem Previous_item;
         private System.Windows.Forms.ToolStripMenuItem Next_item;
         private System.Windows.Forms.Label SecondName;
@@ -307,6 +354,11 @@
         private System.Windows.Forms.Label label_first_name;
         private System.Windows.Forms.Label label_second_name;
         private System.Windows.Forms.Label label_faculty;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripLabelnfo;
+        private System.Windows.Forms.OpenFileDialog dlg_open;
+        private System.Windows.Forms.SaveFileDialog dlg_save;
+        private System.Windows.Forms.Button button_update;
     }
 }
 
