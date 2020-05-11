@@ -68,7 +68,7 @@
             this.студентыToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 30);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -79,27 +79,27 @@
             this.SaveSpisok,
             this.OpenSpicok});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // CreateSpisok
             // 
             this.CreateSpisok.Name = "CreateSpisok";
-            this.CreateSpisok.Size = new System.Drawing.Size(218, 26);
-            this.CreateSpisok.Text = "Создать список";
+            this.CreateSpisok.Size = new System.Drawing.Size(249, 26);
+            this.CreateSpisok.Text = "Создать новый список";
             this.CreateSpisok.Click += new System.EventHandler(this.CreateSpisokItem_Click);
             // 
             // SaveSpisok
             // 
             this.SaveSpisok.Name = "SaveSpisok";
-            this.SaveSpisok.Size = new System.Drawing.Size(218, 26);
+            this.SaveSpisok.Size = new System.Drawing.Size(249, 26);
             this.SaveSpisok.Text = "Сохранить список";
             this.SaveSpisok.Click += new System.EventHandler(this.SaveSpisokClick);
             // 
             // OpenSpicok
             // 
             this.OpenSpicok.Name = "OpenSpicok";
-            this.OpenSpicok.Size = new System.Drawing.Size(218, 26);
+            this.OpenSpicok.Size = new System.Drawing.Size(249, 26);
             this.OpenSpicok.Text = "Открыть список";
             this.OpenSpicok.Click += new System.EventHandler(this.OpenSpisokClick);
             // 
@@ -109,7 +109,7 @@
             this.Previous_item,
             this.Next_item});
             this.просмотрToolStripMenuItem.Name = "просмотрToolStripMenuItem";
-            this.просмотрToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
+            this.просмотрToolStripMenuItem.Size = new System.Drawing.Size(94, 26);
             this.просмотрToolStripMenuItem.Text = "Просмотр";
             // 
             // Previous_item
@@ -134,7 +134,7 @@
             this.addStudent,
             this.deleteStudent});
             this.студентыToolStripMenuItem.Name = "студентыToolStripMenuItem";
-            this.студентыToolStripMenuItem.Size = new System.Drawing.Size(87, 24);
+            this.студентыToolStripMenuItem.Size = new System.Drawing.Size(87, 26);
             this.студентыToolStripMenuItem.Text = "Студенты";
             // 
             // addStudent
@@ -210,9 +210,9 @@
             // 
             this.Previous.Enabled = false;
             this.Previous.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.Previous.Location = new System.Drawing.Point(81, 257);
+            this.Previous.Location = new System.Drawing.Point(111, 257);
             this.Previous.Name = "Previous";
-            this.Previous.Size = new System.Drawing.Size(178, 98);
+            this.Previous.Size = new System.Drawing.Size(148, 98);
             this.Previous.TabIndex = 8;
             this.Previous.Text = "Предыдущий";
             this.Previous.UseVisualStyleBackColor = true;
@@ -224,7 +224,7 @@
             this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.Next.Location = new System.Drawing.Point(280, 257);
             this.Next.Name = "Next";
-            this.Next.Size = new System.Drawing.Size(142, 98);
+            this.Next.Size = new System.Drawing.Size(148, 98);
             this.Next.TabIndex = 9;
             this.Next.Text = "Следующий";
             this.Next.UseVisualStyleBackColor = true;

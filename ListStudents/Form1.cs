@@ -19,11 +19,17 @@ namespace ListOfStudents
         {
             if (need_updated == true)
             {
-                DialogResult result = WantSaveList();
-                if (result == DialogResult.Yes)
-                    SaveSpisokClick(sender, e);
-                else if (result == DialogResult.Cancel)
-                    return;
+                if (students != null)
+                {
+                    if (students.Count > 0)
+                    {
+                        DialogResult result = WantSaveList();
+                        if (result == DialogResult.Yes)
+                            SaveSpisokClick(sender, e);
+                        else if (result == DialogResult.Cancel)
+                            return;
+                    }
+                }
             }
             students = new List<Student>();
             need_updated = true;
@@ -144,28 +150,28 @@ namespace ListOfStudents
         private void addStudentItem_Click(object sender, EventArgs e)//adding a new student
         {
             if (Text_boxes_empty()) return;
+
             if (students == null)
                 students = new List<Student>();
-            students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
-            pos = students.Count;
-
-            deleteStudent.Enabled = true;
-            Next.Enabled = false;
-            Next_item.Enabled = false;
-            Previous.Enabled = true;
-            Previous_item.Enabled = true;
-            need_updated = true;
-            FirstNameTextBox.Focus();
-
-            MakingEmptyLabel();
-            if (file_name != null) //если открыт файл, то обновить файл
+            if (pos == students.Count)
             {
-                XmlSerializer formatter = new XmlSerializer(typeof(List<Student>));
-                using FileStream fs = new FileStream(file_name, FileMode.OpenOrCreate);
-                formatter.Serialize(fs, students);
-                need_updated = false;
+                students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
+                pos = students.Count;
+
+                deleteStudent.Enabled = true;
+                Next.Enabled = false;
+                Next_item.Enabled = false;
+                Previous.Enabled = true;
+                Previous_item.Enabled = true;
+                need_updated = true;
+                FirstNameTextBox.Focus();
+
+                MakingEmptyLabel();
+
+                toolStripLabelnfo.Text = "Студент добавлен";
             }
-            toolStripLabelnfo.Text = "Студент добавлен";
+            else
+                toolStripLabelnfo.Text = "Перейдите в поле для добавления";
         }
 
         private void DeleteStudentClick(object sender, EventArgs e) //delete selected student
@@ -187,6 +193,7 @@ namespace ListOfStudents
                 return;
             }
             students.RemoveAt(index);
+            toolStripLabelnfo.Text = "Элемент удалён";
             pos = index;
             if (students.Count == 0) //если удалили последнего студента
             {
@@ -300,13 +307,6 @@ namespace ListOfStudents
                 students[pos].SecondName = SecondNameTextBox.Text;
                 students[pos].Faculty = FacultyTextBox.Text;
                 need_updated = true;
-                if (file_name != null) //если открыт файл, то обновить файл
-                {
-                    XmlSerializer formatter = new XmlSerializer(typeof(List<Student>));
-                    using FileStream fs = new FileStream(file_name, FileMode.Open);
-                    formatter.Serialize(fs, students);
-                    need_updated = false;
-                }
             }
         }
 
@@ -321,7 +321,8 @@ namespace ListOfStudents
         }
         private DialogResult WantSaveList()
         {
-            return MessageBox.Show("Есть незафиксированные изменения, сохранить их?", "Информация", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+            return MessageBox.Show("Есть незафиксированные изменения, сохранить их?", "Информация",
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
         }
     }
 
