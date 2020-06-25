@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -7,9 +8,8 @@ namespace ListOfStudents
 {
     public partial class Form1 : Form
     {
-        List<Student> students; //текущий список студентов
+        StudentsCollection students; //текущий список студентов
         bool need_updated = false;
-        int pos;    //номер позиции студента, которого мы сейчас просматриваем
         string file_name;
         public Form1()
         {
@@ -21,7 +21,7 @@ namespace ListOfStudents
             {
                 if (students != null)
                 {
-                    if (students.Count > 0)
+                    if (students.students_list.Count > 0)
                     {
                         DialogResult result = WantSaveList();
                         if (result == DialogResult.Yes)
@@ -31,7 +31,7 @@ namespace ListOfStudents
                     }
                 }
             }
-            students = new List<Student>();
+            students = new StudentsCollection();
             need_updated = true;
             Previous.Enabled = false;
             Previous_item.Enabled = false;
@@ -67,14 +67,13 @@ namespace ListOfStudents
                 using FileStream fs = new FileStream(file_name, FileMode.OpenOrCreate);
                 try
                 {
-                    students = (List<Student>)formatter.Deserialize(fs);
+                    students = new StudentsCollection((List<Student>)formatter.Deserialize(fs));
                     need_updated = false;
                     Previous_item.Enabled = false;
                     Previous.Enabled = false;
                     deleteStudent.Enabled = true;
 
-                    pos = 0;
-                    if (students.Count == 0)
+                    if (students.students_list.Count == 0)
                     {
                         deleteStudent.Enabled = false;
                         Next.Enabled = false;
@@ -87,9 +86,12 @@ namespace ListOfStudents
                         Next.Enabled = true;
                         Next_item.Enabled = true;
                     }
-                    FirstNameTextBox.Text = students[pos].FirstName;
-                    SecondNameTextBox.Text = students[pos].SecondName;
-                    FacultyTextBox.Text = students[pos].Faculty;
+                    if (students.GetEnumerator().MoveFirst())
+                    {
+                        FirstNameTextBox.Text = students.Current.FirstName;
+                        SecondNameTextBox.Text = students.Current.SecondName;
+                        FacultyTextBox.Text = students.Current.Faculty;
+                    }
 
                 }
                 catch
@@ -110,54 +112,62 @@ namespace ListOfStudents
                 toolStripLabelnfo.Text = "Файл сохранён: " + info.Name;
                 XmlSerializer formatter = new XmlSerializer(typeof(List<Student>));
                 using FileStream fs = new FileStream(file_name, FileMode.OpenOrCreate);
-                formatter.Serialize(fs, students);
+                formatter.Serialize(fs, students.students_list);
                 need_updated = false;
             }
         }
         private void Previous_Click(object sender, EventArgs e)     //кнопка предыдущий на форме
         {
-            pos--;
             button_update.Enabled = true;
-            if (pos == 0)
+            Next.Enabled = true;
+            Next_item.Enabled = true;
+            if (students.GetEnumerator().MovePrev())
+            {
+                FirstNameTextBox.Text = students.Current.FirstName;
+                SecondNameTextBox.Text = students.Current.SecondName;
+                FacultyTextBox.Text = students.Current.Faculty;
+                if (students.GetEnumerator().Position == 0)
+                {
+                    Previous.Enabled = false;
+                    Previous_item.Enabled = false;
+                }
+            }
+            else
             {
                 Previous.Enabled = false;
                 Previous_item.Enabled = false;
             }
-            Next.Enabled = true;
-            Next_item.Enabled = true;
-            FirstNameTextBox.Text = students[pos].FirstName;
-            SecondNameTextBox.Text = students[pos].SecondName;
-            FacultyTextBox.Text = students[pos].Faculty;
         }
 
         private void Next_Click(object sender, EventArgs e)     //button next
         {
             Previous.Enabled = true;
             Previous_item.Enabled = true;
-            pos++;
-            if (pos == students.Count) //если в списке больше нет элементов, то очистить поля ввода
+            if (students.GetEnumerator().MoveNext())
+            {
+                FirstNameTextBox.Text = students.Current.FirstName;
+                SecondNameTextBox.Text = students.Current.SecondName;
+                FacultyTextBox.Text = students.Current.Faculty;
+            }
+            else
             {
                 button_update.Enabled = false;
                 Next.Enabled = false;
                 Next_item.Enabled = false;
-                MakingEmptyLabel();
+                MoveToAddForm();
                 return;
             }
-            FirstNameTextBox.Text = students[pos].FirstName;
-            SecondNameTextBox.Text = students[pos].SecondName;
-            FacultyTextBox.Text = students[pos].Faculty;
         }
-        private void addStudentItem_Click(object sender, EventArgs e)//adding a new student
+        private void addStudentItem_Click(object sender, EventArgs e) //adding a new student
         {
             if (Text_boxes_empty()) return;
 
             if (students == null)
-                students = new List<Student>();
-            if (pos == students.Count)
+                students = new StudentsCollection();
+            if (students.GetEnumerator().Position + 1 >= students.students_list.Count)
             {
-                students.Add(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
-                pos = students.Count;
-
+                students.AddStudent(new Student(FirstNameTextBox.Text, SecondNameTextBox.Text, FacultyTextBox.Text));
+                students.GetEnumerator().MoveEnd();
                 deleteStudent.Enabled = true;
                 Next.Enabled = false;
                 Next_item.Enabled = false;
@@ -166,7 +176,7 @@ namespace ListOfStudents
                 need_updated = true;
                 FirstNameTextBox.Focus();
 
-                MakingEmptyLabel();
+                MoveToAddForm();
 
                 toolStripLabelnfo.Text = "Студент добавлен";
             }
@@ -186,16 +196,15 @@ namespace ListOfStudents
             string second_name = SecondNameTextBox.Text;
             string faculty_name = FacultyTextBox.Text;
 
-            int index = students.FindIndex(x => x.FirstName == first_name && x.SecondName == second_name && x.Faculty == faculty_name);
+            int index = students.students_list.FindIndex(x => x.FirstName == first_name && x.SecondName == second_name && x.Faculty == faculty_name);
             if (index < 0)
             {
                 toolStripLabelnfo.Text = "Элемент не найден";
                 return;
             }
-            students.RemoveAt(index);
+            students.students_list.RemoveAt(index);
             toolStripLabelnfo.Text = "Элемент удалён";
-            pos = index;
-            if (students.Count == 0) //если удалили последнего студента
+            if (students.students_list.Count == 0) //если удалили последнего студента
             {
                 button_update.Enabled = false;
                 Previous.Enabled = false;
@@ -203,17 +212,17 @@ namespace ListOfStudents
                 Next.Enabled = false;
                 Next_item.Enabled = false;
                 deleteStudent.Enabled = false;
-                MakingEmptyLabel();
+                MoveToAddForm();
                 return;
             }
-            if (pos == (students.Count - 1) || pos == students.Count) //если удалили предпоследнего студента
+            if (students.GetEnumerator().Position + 1 == (students.students_list.Count - 1) || students.GetEnumerator().Position == students.students_list.Count) //если удалили предпоследнего студента
             {
-                if (students.Count == 1)
+                if (students.students_list.Count == 1)
                 {
                     Previous.Enabled = false;
                     Previous_item.Enabled = false;
                 }
-                if (pos == students.Count) pos--;
+                if (students.GetEnumerator().Position + 1 == students.students_list.Count) students.GetEnumerator().MovePrev();
             }
             need_updated = true;
             if (file_name != null) //если открыт файл, то обновить файл
@@ -223,9 +232,9 @@ namespace ListOfStudents
                 formatter.Serialize(fs, students);
                 need_updated = false;
             }
-            FirstNameTextBox.Text = students[pos].FirstName;
-            SecondNameTextBox.Text = students[pos].SecondName;
-            FacultyTextBox.Text = students[pos].Faculty;
+            FirstNameTextBox.Text = students.Current.FirstName;
+            SecondNameTextBox.Text = students.Current.SecondName;
+            FacultyTextBox.Text = students.Current.Faculty;
         }
 
         private void FirstNameTextBox_TextChanged(object sender, EventArgs e)
@@ -270,7 +279,7 @@ namespace ListOfStudents
             }
         }
 
-        private void MakingEmptyLabel()
+        private void MoveToAddForm()
         {
             FirstNameTextBox.Text = string.Empty;
             SecondNameTextBox.Text = string.Empty;
@@ -303,9 +312,9 @@ namespace ListOfStudents
             }
             else
             {
-                students[pos].FirstName = FirstNameTextBox.Text;
-                students[pos].SecondName = SecondNameTextBox.Text;
-                students[pos].Faculty = FacultyTextBox.Text;
+                students.Current.FirstName = FirstNameTextBox.Text;
+                students.Current.SecondName = SecondNameTextBox.Text;
+                students.Current.Faculty = FacultyTextBox.Text;
                 need_updated = true;
             }
         }
@@ -340,5 +349,165 @@ namespace ListOfStudents
             this.Faculty = Faculty;
         }
 
+    }
+
+    public class StudentsCollection : IMyEnumerable
+    {
+        public List<Student> students_list { get; private set; }
+
+        private ConsistenlyOrder consistenlyOrder;
+        private FilterOrder skipOneOrder;
+
+        public Student Current => (Student)GetEnumerator().Current;
+
+        int type_order = 0;
+        public StudentsCollection()
+        {
+            students_list = new List<Student>();
+            consistenlyOrder = new ConsistenlyOrder(this);
+            skipOneOrder = new FilterOrder(this);
+        }
+        public StudentsCollection(List<Student> students_list):this()
+        {
+            this.students_list = students_list;
+        }
+        public void AddStudent(Student student)
+        {
+            students_list.Add(student);
+        }
+
+        public void SetOrder(int type)
+        {
+            type_order = type;
+        }
+
+        public IMyIterator GetEnumerator()
+        {
+            if (type_order == 0)
+                return consistenlyOrder;
+            else
+                return skipOneOrder;
+        }
+    }
+
+    public interface IMyIterator : IEnumerator
+    {
+        int Position { get; }
+        bool MovePrev();
+        bool MoveEnd();
+        bool MoveFirst();
+    }
+
+    public class ConsistenlyOrder : IMyIterator
+    {
+        public int Position { get; private set; } = -1;
+        private StudentsCollection _collection;
+
+        public ConsistenlyOrder(StudentsCollection collection)
+        {
+            this._collection = collection;
+        }
+
+        object IEnumerator.Current => Current();
+
+        public Student Current()
+        {
+            return _collection.students_list[Position];
+        }
+
+        public bool MoveNext()
+        {
+            int new_position = Position + 1;
+            if (new_position < _collection.students_list.Count)
+            {
+                Position = new_position;
+                return true;
+            }
+            else
+            {
+                Position = _collection.students_list.Count;
+                return false;
+            }
+        }
+
+        public bool MovePrev()
+        {
+            if (Position <= 0)
+            {
+                return false;
+            }
+
+            --Position;
+            return true;
+
+        }
+
+        public void Reset()
+        {
+            Position = -1;
+        }
+
+        public bool MoveEnd()
+        {
+            if (_collection.students_list.Count > 0)
+            {
+                Position = _collection.students_list.Count;
+                return true;
+            }
+            return false;
+        }
+
+        public bool MoveFirst()
+        {
+            if (_collection.students_list.Count > 0)
+            {
+                Position = 0;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class FilterOrder : IMyIterator
+    {
+        public int Position { get; private set; } = 0;
+
+        StudentsCollection _collection;
+        public object Current => throw new NotImplementedException();
+
+        public FilterOrder(StudentsCollection collection)
+        {
+            this._collection = collection;
+        }
+
+        public bool MoveNext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MovePrev()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MoveEnd()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MoveFirst()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IMyEnumerable
+    {
+        IMyIterator GetEnumerator();
     }
 }
